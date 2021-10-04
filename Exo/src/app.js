@@ -19,4 +19,3 @@ app.use(async function(ctx) {
 
 // demarrer l'application
 if (!module.parent) app.listen(3000);
-```
