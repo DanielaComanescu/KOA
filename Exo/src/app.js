@@ -1,21 +1,85 @@
-// require est un mot clef necessaire pour importer un paquet
-const Koa = require('koa');
+const Koa = require('koa')
 
+// acceder aux params depuis le contexte
+const koaBody = require('koa-body')
 
-// rendre disponbile pour d'autres fichiers l'applicatin koa 
-const app = module.exports = new Koa();
+// declarer un router pour avoir plusieurs route
+const Router = require('koa-router')
 
-const koaBody = require('koa-body');
-app.use(koaBody({ multipart: true }));
+// Declare Main Application
+const app = module.exports = new Koa()
+app.use(koaBody({ multipart: true }))
 
-// declaration et utilisation d'une fonction qui retournera Hello-World
-app.use(async function(ctx) {
-  // ctx.body c'est le contenu
-  // const body = ctx.request.body;
-  // console.log(body)
+// Declare Router
+var router = new Router()
+
+// add route get to Router
+router.get('/hello-world/', (ctx, next) => {
+    ctx.body = 'Hello-World'
+})
+
+router.post('/body-parser-object/', (ctx, next) => {
+  ctx.body = ctx.request.body
+})
+
+router.put('/body-parser-object/:id', (ctx, next) => {
+  ctx.request.body.id= ctx.params.id
+  ctx.body = ctx.request.body
+})
+
+//
+router.post('/body-parser-string/', (ctx, next) => {
   ctx.body = `Request Body: ${JSON.stringify(ctx.request.body)}`;
-  // ctx.body = 'Hello-World-Test2';
-});
+})
 
-// demarrer l'application
-if (!module.parent) app.listen(3000);
+router.post('/authentification-to-db',  (ctx, next) => {
+  let jwt = response.data.jwt
+  console.log(`Bearer ${response.data.jwt}`)
+})
+
+router.post('/get-db-collection', (ctx, next) => {
+  // recuperer en parametre le nom de la collection a requeter
+  // a vous de coder
+  // return content of collection
+})
+
+
+router.post('/',  (ctx, next) => {
+  // a vous de coder
+  return {jwt: jwt}
+})
+
+
+// Start Application
+if (!module.parent) {
+    app
+    .use(router.routes()) // Specify we use a Router
+    .use(router.allowedMethods()) 
+    .listen(3000)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// router.post('/body-parser-object/', (ctx, next) => {
+//     ctx.body = ctx.request.body
+// })
+
+// router.put('/body-parser-object/:id', (ctx, next) => {
+//     ctx.request.body.id = ctx.params.id
+//     ctx.body = ctx.request.body
+// })
+
+// router.post('/body-parser-string/', (ctx, next) => {
+//     ctx.body = `Request Body: ${JSON.stringify(ctx.request.body)}`;
+// })
